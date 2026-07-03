@@ -147,6 +147,10 @@ class AuditController extends Controller
             'lead_auditor_id' => 'nullable',
         ]);
         $template = InstrumentTemplate::where('is_active', true)->first();
+        if (! $template) {
+            return back()->withInput()
+                ->with('error', 'Belum ada template instrumen yang aktif. Silakan hubungi Admin Prodi.');
+        }
         $audit = Audit::create([
             'nama_audit' => $request->nama_audit,
             'periode_id' => $request->periode_id,
@@ -352,7 +356,8 @@ class AuditController extends Controller
                     'Review Temuan Selesai',
                     'Indikator '.$temuan->kode_indikator.' telah direview.',
                     route('temuan.index', [
-                        'temuan' => $temuan->id
+                        'audit_id' => $temuan->audit_id,
+                        'temuan' => $temuan->id,
                     ])
                 )
             );
@@ -906,6 +911,26 @@ class AuditController extends Controller
                 'Content-Type' =>
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ]
+        );
+    }
+
+    public function uploadFinalPdf(Request $request, $id)
+    {
+        $request->validate(['file' => 'required|mimes:pdf|max:10240',]);
+        $audit = Audit::findOrFail($id);
+
+        if ($audit->final_ptpp_pdf && Storage::disk('public')->exists($audit->final_ptpp_pdf)) {
+            Storage::disk('public')->delete($audit->final_ptpp_pdf);
+        }
+
+        $path = $request->file('file')->store('final-ptpp', 'public');
+        $audit->update([
+            'final_ptpp_pdf' => $path,
+        ]);
+
+        return back()->with(
+            'success',
+            'Dokumen PDF final berhasil diunggah.'
         );
     }
 

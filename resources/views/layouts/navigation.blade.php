@@ -51,6 +51,13 @@
                 <i data-lucide="file-warning" class="flex items-start w-5 h-5"></i>
                 <span>Temuan Saya</span>
             </x-nav-link>
+            @if(in_array(auth()->user()->role->nama, ['KPS', 'TEKNISI']))
+                <x-nav-link @click="sidebarOpen = false" :href="route('auditi.hasil-auditor.index')"
+                    :active="request()->routeIs('auditi.hasil-auditor.*')" class="flex items-center gap-3 w-full">
+                    <i data-lucide="file-check-2" class="w-5 h-5"></i>
+                    <span>Hasil Auditor</span>
+                </x-nav-link>
+            @endif
             {{-- MASTER DATA KHUSUS ADMIN PRODI --}}
             @if(auth()->user()->role->nama == 'ADMIN_PRODI')
                 <div class="pt-1 space-y-2">

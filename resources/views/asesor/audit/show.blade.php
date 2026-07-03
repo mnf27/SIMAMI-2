@@ -2,7 +2,7 @@
     <x-slot name="header">
     </x-slot>
     <div x-cloak
-        x-data="{ openImport: {{ $errors->has('file') ? 'true' : 'false' }}, reviewMode: @json(request("mode") == "review") }"
+        x-data="{ openImport: {{ $errors->has('file') ? 'true' : 'false' }}, openUploadPdf: false, reviewMode: @json(request("mode") == "review") }"
         class="pt-[15px] pb-[13px] lg:py-[14px]">
         @if(request('mode') !== 'review')
             <div class="max-w-7xl mx-auto">
@@ -223,22 +223,35 @@
                     </div>
                 </div>
                 {{-- LIST TEMUAN --}}
-                <div x-data="{ openTemuan:null }" class="space-y-2">
-                    <div class="flex items-start justify-between border-t border-slate-300 pt-2">
-                        <div class="pl-1">
+                <div x-data="{ openTemuan: {{ request('temuan') ? (int) request('temuan') : 'null' }} }"
+                    x-init="if(openTemuan){ $nextTick(() => { document .getElementById('temuan-' + openTemuan) ?.scrollIntoView({ behavior: 'smooth', block: 'center' }); }); }"
+                    class="space-y-2">
+                    <div
+                        class="relative flex flex-col lg:items-start lg:flex-row lg:justify-between border-t border-slate-300 pt-2">
+                        <div class="pl-1 mb-1">
                             <h3 class="text-lg font-semibold text-slate-800">
                                 Daftar Temuan
                             </h3>
                         </div>
-                        <a href="{{ route('asesor.audit.export', $audit->id) }}"
-                            class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400">
-                            <i data-lucide="upload" class="w-4 h-4"></i>
-                            Export Excel
-                        </a>
+                        <div class="flex relative flex-col lg:flex-row gap-2 mb-2">
+                            <div class="flex justify-between lg:gap-2">
+                                <a href="{{ route('asesor.audit.export', $audit->id) }}"
+                                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    Export Excel
+                                </a>
+                                <button @click="openUploadPdf = true"
+                                    class="inline-flex items-center justify-center gap-2 rounded-lg border border-red-500 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                                    Upload PDF Final
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     @forelse($temuan as $t)
-                        <div
-                            class="rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                        <div id="temuan-{{ $t->id }}"
+                            class="rounded-xl overflow-hidden border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:shadow-xl"
+                            :class="openTemuan === {{ $t->id }} ? 'ring-2 ring-[#1E3A8A]/50' : 'border-slate-200'">
                             <button type="button" @click="openTemuan = openTemuan === {{ $t->id }} ? null : {{ $t->id }}"
                                 class="flex w-full items-center justify-between px-4 pt-3 pb-2 text-left">
                                 <div class="w-full">
@@ -444,6 +457,75 @@
                         <button type="submit"
                             class="rounded-lg bg-[#1E3A8A] px-3 py-2 text-sm font-medium text-white hover:bg-[#152F79]">
                             Import
+                        </button>
+                    </div>
+                </form>
+            </x-ui.modal>
+            <x-ui.modal open="openUploadPdf" title="Upload PDF Final PTPP" maxWidth="max-w-md">
+                <form action="{{ route('asesor.audit.uploadFinalPdf', $audit->id) }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    <div class="p-3">
+                        <div x-data="{ fileName:'', isDragging:false, dragCounter:0 }">
+                            <input x-ref="file" type="file" name="file" accept=".pdf" required class="hidden"
+                                @change="fileName = $event.target.files[0]?.name || '';">
+                            <div @click="$refs.file.click()" @dragover.prevent="isDragging = true;"
+                                @dragenter.prevent="dragCounter++; isDragging = true;"
+                                @dragleave.prevent="dragCounter--; if (dragCounter <= 0) { isDragging = false; dragCounter = 0; }"
+                                @drop.prevent="dragCounter = 0; isDragging = false; $refs.file.files = $event.dataTransfer.files; fileName = $event.dataTransfer.files[0]?.name || '';"
+                                class="cursor-pointer rounded-xl border-2 border-dashed p-10 text-center transition"
+                                :class="isDragging? 'border-[#1E3A8A] bg-[#EEF2FF]': 'border-slate-300 bg-slate-50 hover:border-[#1E3A8A] hover:bg-[#EEF2FF]'">
+                                <div class="flex flex-col items-center">
+                                    <div class="mb-2 flex h-8 items-center justify-center">
+                                        <div class="mb-2">
+                                            <i data-lucide="file-check-2" class="w-8 h-8 text-slate-400">
+                                            </i>
+                                        </div>
+                                    </div>
+                                    <p class="font-semibold text-slate-700"
+                                        x-text="isDragging ? 'Lepaskan File PDF di Sini' : 'Tarik File PDF ke Sini'">
+                                    </p>
+                                    <p class="text-sm text-slate-500"
+                                        x-text="isDragging ? 'File akan diunggah setelah dilepas' : 'atau klik untuk memilih file PDF'">
+                                    </p>
+                                    <template x-if="fileName">
+                                        <div
+                                            class="mt-2 inline-flex items-center gap-2 rounded-full bg-[#E0E8FF] px-2 py-1 text-xs font-medium text-[#1E3A8A]">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M14 2v6h6" />
+                                            </svg>
+                                            <span x-text="fileName"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            @error('file')
+                                <div class="mt-2">
+                                    <div class="flex items-center gap-2">
+                                        <i data-lucide="alert-circle" class="w-3 h-3 text-red-500">
+                                        </i>
+                                        <span class="text-xs text-red-600">
+                                            {{ $message }}
+                                        </span>
+                                    </div>
+                                </div>
+                            @enderror
+                            <p class="mt-2 text-xs text-slate-400">
+                                Format yang didukung: .pdf (maks. 10 MB)
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-2 pb-3 px-3">
+                        <button type="button" @click="openUploadPdf = false"
+                            class="rounded-lg px-3 py-2 bg-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-400">
+                            Batal
+                        </button>
+                        <button type="submit"
+                            class="rounded-lg bg-[#1E3A8A] px-3 py-2 text-sm font-medium text-white hover:bg-[#152F79]">
+                            Upload PDF
                         </button>
                     </div>
                 </form>

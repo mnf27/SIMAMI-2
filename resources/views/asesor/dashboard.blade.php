@@ -234,7 +234,7 @@
                     <!-- LIST -->
                     <div class="space-y-2">
                         @forelse ($temuanTerbaru as $temuan)
-                            <a href="{{ route('asesor.temuan.index') }}?temuan={{ $temuan->id }}"
+                            <a href="{{ route('asesor.audit.show', $temuan->audit) }}?temuan={{ $temuan->id }}"
                                 class="group flex items-start justify-between rounded-2xl border border-slate-100 bg-slate-50/50 p-3 transition-all duration-300 hover:-translate-y-1 hover:border-slate-200 hover:bg-white hover:shadow-lg">
                                 <!-- LEFT -->
                                 <div class="flex items-start gap-3">

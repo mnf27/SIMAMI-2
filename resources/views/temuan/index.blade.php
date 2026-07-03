@@ -2,7 +2,9 @@
     <x-slot name="header">
     </x-slot>
     <div class="pt-[15px] pb-[13px] lg:py-[14px]">
-        <div x-data="{ openTemuan: {{ request('temuan', $temuan->id ?? 'null') }} }" class="max-w-7xl mx-auto">
+        <div x-data="{ openTemuan: {{ request('temuan') ? (int) request('temuan') : 'null' }} }"
+            x-init="if(openTemuan){ $nextTick(() => { document.getElementById('temuan-' + openTemuan) ?.scrollIntoView({ behavior:'smooth', block:'center' }); }); }"
+            class="max-w-7xl mx-auto">
             <div x-cloak x-data="{ showAuditInfo:false }"
                 class="relative rounded-xl bg-gradient-to-br from-[#1E3A8A] to-[#4866BD] pt-2 pb-3 px-3 lg:pb-3 lg:pt-2 lg:px-3 text-white shadow-md mb-3">
                 <div class="absolute right-0 top-0 opacity-10">
@@ -190,11 +192,11 @@
                                             {{ $t->status }}
                                         </span>
                                     </div>
-                                        <span
-                                            class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold {{ $flowClass }}">
-                                            <i data-lucide="{{ $flowIcon }}" class="w-3 h-3"></i>
-                                            {{ $flowLabel }}
-                                        </span>
+                                    <span
+                                        class="inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold {{ $flowClass }}">
+                                        <i data-lucide="{{ $flowIcon }}" class="w-3 h-3"></i>
+                                        {{ $flowLabel }}
+                                    </span>
                                 </div>
                                 <div class="mt-2 border-t border-slate-200 pt-2">
                                     <h4 class="text-[15px] font-semibold text-slate-600"

@@ -10,6 +10,7 @@ class Audit extends Model
         'nama_audit',
         'periode_id',
         'instrument_template_id',
+        'final_ptpp_pdf',
         'tanggal_audit',
         'unit_id',
         'wakil_auditi_id',

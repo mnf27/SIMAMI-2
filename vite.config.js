@@ -12,11 +12,11 @@ export default defineConfig({
     // Hotspot HP: 10.47.188.216
     // Wifi Aris: 192.168.1.12
     // Wifi Kost: 192.168.1.9
-    // nOBAR gta: 192.168.100.172
+    // Nobar GTA: 192.168.100.172
     // server: {
     //     host: "0.0.0.0",
     //     hmr: {
-    //         host: "10.47.188.216",
+    //         host: "10.91.90.216",
     //     },
     // },
 });
