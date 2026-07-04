@@ -196,14 +196,17 @@ class AuditController extends Controller
 
     public function downloadTemplate($id)
     {
-        $audit = Audit::with('instrumentTemplate')->findOrFail($id);
+        $audit = Audit::with(['instrumentTemplate', 'periode'])->findOrFail($id);
         $template = $audit->instrumentTemplate ?? InstrumentTemplate::where('is_active', true)->first();
 
         if (! $template) {
             return back()->with('error', 'Template belum tersedia.');
         }
 
-        return Storage::disk('public')->download($template->path, $template->nama_file);
+        $namaAudit = preg_replace('/[\\\\\/:*?"<>|]/', '', $audit->nama_audit);
+        $filename = 'Template_'.$namaAudit.'_'.$audit->periode->kode.'.xlsx';
+
+        return Storage::disk('public')->download($template->path, $filename);
     }
 
     public function temuan(Request $request)
@@ -901,16 +904,12 @@ class AuditController extends Controller
             $spreadsheet,
             'Xlsx'
         );
-        $filename = 'Audit-'.$audit->id.'.xlsx';
-        return response()->streamDownload(
-            function () use ($writer) {
-                $writer->save('php://output');
-            },
-            $filename,
-            [
-                'Content-Type' =>
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ]
+        $namaAudit = preg_replace('/[\\\\\/:*?"<>|]/', '', $audit->nama_audit);
+        $filename = $namaAudit.'_'.$audit->periode->kode.'.xlsx';
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        },
+            $filename, ['Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',]
         );
     }
 

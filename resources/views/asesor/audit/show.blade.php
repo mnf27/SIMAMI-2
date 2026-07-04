@@ -208,14 +208,14 @@
                                 Upload file instrumen audit untuk membagikan temuan.
                             </p>
                         </div>
-                        <div class="relative flex flex-col lg:items-end lg:flex-row lg:justify-between gap-3">
+                        <div class="relative flex flex-col lg:items-end lg:flex-row lg:justify-between gap-2">
                             <a href="{{ route('asesor.audit.template.download', $audit->id) }}"
-                                class="inline-flex items-center justify-center gap-2 rounded-lg border border-[#1E3A8A] px-4 py-2 text-[#1E3A8A] hover:bg-[#EEF2FF]">
+                                class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-yellow-500 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600">
                                 <i data-lucide="download" class="w-4 h-4"></i>
                                 Download Template
                             </a>
                             <button @click="openImport = true"
-                                class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1E3A8A] px-4 py-2 text-white hover:bg-[#152F79]">
+                                class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-[#4866BD] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E3A8A]">
                                 <i data-lucide="download" class="w-4 h-4"></i>
                                 Import Excel
                             </button>
@@ -236,12 +236,12 @@
                         <div class="flex relative flex-col lg:flex-row gap-2 mb-2">
                             <div class="flex justify-between lg:gap-2">
                                 <a href="{{ route('asesor.audit.export', $audit->id) }}"
-                                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-400">
+                                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-green-500 px-4 py-2 text-sm font-medium text-white hover:bg-green-600">
                                     <i data-lucide="upload" class="w-4 h-4"></i>
                                     Export Excel
                                 </a>
                                 <button @click="openUploadPdf = true"
-                                    class="inline-flex items-center justify-center gap-2 rounded-lg border border-red-500 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                    class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600">
                                     <i data-lucide="file-text" class="w-4 h-4"></i>
                                     Upload PDF Final
                                 </button>
