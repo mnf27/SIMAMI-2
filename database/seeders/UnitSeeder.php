@@ -3,14 +3,13 @@
 namespace Database\Seeders;
 
 use App\Models\Unit;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class UnitSeeder extends Seeder
 {
     public function run(): void
     {
-        Unit::insert([
+        $units = [
             [
                 'nama' => 'D3 Teknologi Informasi',
                 'jenis' => 'PRODI',
@@ -21,6 +20,16 @@ class UnitSeeder extends Seeder
                 'jenis' => 'LAB',
                 'lokasi' => 'PSDKU Lumajang',
             ],
-        ]);
+        ];
+
+        foreach ($units as $unit) {
+            Unit::updateOrCreate(
+                ['nama' => $unit['nama']],
+                [
+                    'jenis' => $unit['jenis'],
+                    'lokasi' => $unit['lokasi'],
+                ]
+            );
+        }
     }
 }
