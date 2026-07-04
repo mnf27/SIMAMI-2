@@ -305,7 +305,7 @@
             @endisset
             <!-- Scrollable Content -->
             <main class="flex-1 flex flex-col">
-                <div class="flex-1 pt-[113px] sm:pt-[104px] lg:pt-[64px] px-3 sm:px-3 lg:px-[15px]">
+                <div class="flex-1 pt-[113px] md:pt-[113px] lg:pt-[64px] px-3 sm:px-3 lg:px-[15px]">
                     {{ $slot }}
                 </div>
                 <footer class="bg-[#D4D6DC]/50 px-4 pt-3 pb-2 lg:pt-4 lg:pb-3">

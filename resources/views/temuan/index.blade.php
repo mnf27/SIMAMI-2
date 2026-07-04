@@ -4,7 +4,7 @@
     <div class="pt-[15px] pb-[13px] lg:py-[14px]">
         <div x-data="{ openTemuan: {{ request('temuan') ? (int) request('temuan') : 'null' }} }"
             x-init="if(openTemuan){ $nextTick(() => { document.getElementById('temuan-' + openTemuan) ?.scrollIntoView({ behavior:'smooth', block:'center' }); }); }"
-            class="max-w-7xl mx-auto">
+            class="max-w-[1700px] mx-auto">
             <div x-cloak x-data="{ showAuditInfo:false }"
                 class="relative rounded-xl bg-gradient-to-br from-[#1E3A8A] to-[#4866BD] pt-2 pb-3 px-3 lg:pb-3 lg:pt-2 lg:px-3 text-white shadow-md mb-3">
                 <div class="absolute right-0 top-0 opacity-10">

@@ -3,7 +3,7 @@
     </x-slot>
 
     <div class="pt-[15px] pb-[13px] lg:py-[14px]">
-        <div class="max-w-7xl mx-auto space-y-2">
+        <div class="max-w-[1700px] mx-auto space-y-2">
             <div
                 class="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#1E3A8A] to-[#4866BD] pt-3 pb-4 px-4 lg:pl-5 lg:py-4 text-white shadow-md mb-3">
 

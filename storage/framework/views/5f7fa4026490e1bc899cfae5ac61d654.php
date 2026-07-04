@@ -342,7 +342,7 @@
             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             <!-- Scrollable Content -->
             <main class="flex-1 flex flex-col">
-                <div class="flex-1 pt-[113px] sm:pt-[104px] lg:pt-[64px] px-3 sm:px-3 lg:px-[15px]">
+                <div class="flex-1 pt-[113px] md:pt-[113px] lg:pt-[64px] px-3 sm:px-3 lg:px-[15px]">
                     <?php echo e($slot); ?>
 
                 </div>

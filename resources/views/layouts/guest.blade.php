@@ -23,7 +23,7 @@
     class="font-sans antialiased bg-[#88A4F4]/50 lg:bg-gradient-to-br lg:from-[#1E3A8A] lg:to-[#080F24] overscroll-none overflow-y-hidden overflow-x-hidden">
     <div class="min-h-screen grid lg:grid-cols-2">
         {{-- LEFT SIDE --}}
-        <div class="hidden lg:flex relative text-white">
+        <div class="flex items-center hidden lg:flex relative text-white">
             <div class="absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-white/5 blur-3xl">
             </div>
             {{-- Blur Circle 2 --}}
@@ -43,7 +43,7 @@
                     <h2 class="text-5xl font-bold leading-tight max-w-xl">
                         Digitalisasi Sistem Informasi Audit Mutu Internal
                     </h2>
-                    <p class="mt-4 text-blue-100 max-w-lg text-lg leading-relaxed">
+                    <p class="mt-4 text-blue-100 max-w-[1700px] mx-w-auto text-lg leading-relaxed">
                         Kelola proses audit, temuan, tindak lanjut, serta monitoring
                         mutu Program Studi dan Laboratorium secara terintegrasi.
                     </p>
