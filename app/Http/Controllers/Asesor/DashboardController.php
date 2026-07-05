@@ -25,13 +25,11 @@ class DashboardController extends Controller
         $periode = session('periode');
         $periodeSebelumnya = null;
         if ($periode) {
-            [$tahun, $semester] = explode('-', $periode);
-            if ($semester == 1) {
-                $periodeSebelumnya =
-                    ($tahun - 1).'-2';
-            } else {
-                $periodeSebelumnya =
-                    $tahun.'-1';
+            $periodeAktif = Periode::where('kode', $periode)->first();
+            if ($periodeAktif) {
+                $periodeSebelumnya = Periode::where('kode', '<', $periodeAktif->kode)
+                    ->orderByDesc('kode')
+                    ->first();
             }
         }
         $totalAudit = Audit::when(
@@ -80,20 +78,9 @@ class DashboardController extends Controller
         $totalOpenLalu = TemuanAudit::when(
             $periodeSebelumnya,
             function ($query) use ($periodeSebelumnya) {
-                $query->whereHas(
-                    'audit',
-                    function ($q) use ($periodeSebelumnya) {
-                        $q->whereHas(
-                            'periode',
-                            function ($sub) use ($periodeSebelumnya) {
-                                $sub->where(
-                                    'kode',
-                                    $periodeSebelumnya
-                                );
-                            }
-                        );
-                    }
-                );
+                $query->whereHas('audit', function ($q) use ($periodeSebelumnya) {
+                    $q->where('periode_id', $periodeSebelumnya->id);
+                });
             }
         )
             ->where('status', 'OPEN')
@@ -101,26 +88,21 @@ class DashboardController extends Controller
         $totalClosedLalu = TemuanAudit::when(
             $periodeSebelumnya,
             function ($query) use ($periodeSebelumnya) {
-                $query->whereHas(
-                    'audit',
-                    function ($q) use ($periodeSebelumnya) {
-                        $q->whereHas(
-                            'periode',
-                            function ($sub) use ($periodeSebelumnya) {
-                                $sub->where(
-                                    'kode',
-                                    $periodeSebelumnya
-                                );
-                            }
-                        );
-                    }
-                );
+                $query->whereHas('audit', function ($q) use ($periodeSebelumnya) {
+                    $q->where('periode_id', $periodeSebelumnya->id);
+                });
             }
         )
             ->where('status', 'CLOSED')
             ->count();
-        $trendOpen = $totalOpen - $totalOpenLalu;
-        $trendClosed = $totalClosed - $totalClosedLalu;
+        $trendOpen = null;
+        $trendClosed = null;
+
+        if ($periodeSebelumnya) {
+            $trendOpen = $totalOpen - $totalOpenLalu;
+            $trendClosed = $totalClosed - $totalClosedLalu;
+        }
+        
         $persentaseClosed =
             $totalTemuan > 0
             ? round(($totalClosed / $totalTemuan) * 100)

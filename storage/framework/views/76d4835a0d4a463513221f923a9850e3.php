@@ -134,7 +134,9 @@
                         <div class="mt-1 flex flex-col items-start sm:flex-row sm:items-center sm:justify-between">
                             <div
                                 class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold <?php echo e($trendOpen > 0 ? 'bg-red-50 text-red-600' : ($trendOpen < 0 ? 'bg-green-50 text-green-600' : 'bg-slate-100 text-slate-500')); ?>">
-                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($trendOpen > 0): ?>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(is_null($trendOpen)): ?>
+                                    Data awal
+                                <?php elseif($trendOpen > 0): ?>
                                     <i data-lucide="trending-up" class="w-3 h-3"></i>
                                     +<?php echo e($trendOpen); ?>
 
@@ -144,11 +146,12 @@
 
                                 <?php else: ?>
                                     <i data-lucide="minus" class="w-3 h-3"></i>
-                                    0
+                                    Tidak berubah
                                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </div>
                             <p class="mt-1 text-xs text-slate-400">
-                                dibanding periode lalu
+                                <?php echo e(is_null($trendOpen) ? 'Belum ada pembanding' : 'dibanding periode lalu'); ?>
+
                             </p>
                         </div>
                     </div>
@@ -180,7 +183,9 @@
                         <div class="mt-1 flex flex-col items-start sm:flex-row sm:items-center sm:justify-between">
                             <div
                                 class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold <?php echo e($trendClosed > 0 ? 'bg-green-50 text-green-600' : ($trendClosed < 0 ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-500')); ?>">
-                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($trendClosed > 0): ?>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(is_null($trendClosed)): ?>
+                                    Data awal
+                                <?php elseif($trendClosed > 0): ?>
                                     <i data-lucide="trending-up" class="w-3 h-3"></i>
                                     +<?php echo e($trendClosed); ?>
 
@@ -190,11 +195,12 @@
 
                                 <?php else: ?>
                                     <i data-lucide="minus" class="w-3 h-3"></i>
-                                    0
+                                    Tidak berubah
                                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </div>
                             <p class="mt-1 text-xs text-slate-400">
-                                dibanding periode lalu
+                                <?php echo e(is_null($trendClosed) ? 'Belum ada pembanding' : 'dibanding periode lalu'); ?>
+
                             </p>
                         </div>
                     </div>
