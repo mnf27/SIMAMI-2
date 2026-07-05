@@ -136,12 +136,15 @@
                                 class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold <?php echo e($trendOpen > 0 ? 'bg-red-50 text-red-600' : ($trendOpen < 0 ? 'bg-green-50 text-green-600' : 'bg-slate-100 text-slate-500')); ?>">
                                 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($trendOpen > 0): ?>
                                     <i data-lucide="trending-up" class="w-3 h-3"></i>
-                                    +<?php echo e($trendOpen); ?>%
+                                    +<?php echo e($trendOpen); ?>
+
                                 <?php elseif($trendOpen < 0): ?>
                                     <i data-lucide="trending-down" class="w-3 h-3"></i>
-                                    <?php echo e($trendOpen); ?>%
+                                    -<?php echo e(abs($trendOpen)); ?>
+
                                 <?php else: ?>
-                                    0%
+                                    <i data-lucide="minus" class="w-3 h-3"></i>
+                                    0
                                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </div>
                             <p class="mt-1 text-xs text-slate-400">
@@ -179,12 +182,15 @@
                                 class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold <?php echo e($trendClosed > 0 ? 'bg-green-50 text-green-600' : ($trendClosed < 0 ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-500')); ?>">
                                 <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($trendClosed > 0): ?>
                                     <i data-lucide="trending-up" class="w-3 h-3"></i>
-                                    +<?php echo e($trendClosed); ?>%
+                                    +<?php echo e($trendClosed); ?>
+
                                 <?php elseif($trendClosed < 0): ?>
                                     <i data-lucide="trending-down" class="w-3 h-3"></i>
-                                    <?php echo e($trendClosed); ?>%
+                                    -<?php echo e(abs($trendClosed)); ?>
+
                                 <?php else: ?>
-                                    0%
+                                    <i data-lucide="minus" class="w-3 h-3"></i>
+                                    0
                                 <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             </div>
                             <p class="mt-1 text-xs text-slate-400">

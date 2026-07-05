@@ -119,24 +119,8 @@ class DashboardController extends Controller
         )
             ->where('status', 'CLOSED')
             ->count();
-        $trendOpen = 0;
-        if ($totalOpenLalu > 0) {
-            $trendOpen = round(
-                (
-                    ($totalOpen - $totalOpenLalu)
-                    / $totalOpenLalu
-                ) * 100
-            );
-        }
-        $trendClosed = 0;
-        if ($totalClosedLalu > 0) {
-            $trendClosed = round(
-                (
-                    ($totalClosed - $totalClosedLalu)
-                    / $totalClosedLalu
-                ) * 100
-            );
-        }
+        $trendOpen = $totalOpen - $totalOpenLalu;
+        $trendClosed = $totalClosed - $totalClosedLalu;
         $persentaseClosed =
             $totalTemuan > 0
             ? round(($totalClosed / $totalTemuan) * 100)

@@ -122,12 +122,13 @@
                                 class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold {{ $trendOpen > 0 ? 'bg-red-50 text-red-600' : ($trendOpen < 0 ? 'bg-green-50 text-green-600' : 'bg-slate-100 text-slate-500') }}">
                                 @if($trendOpen > 0)
                                     <i data-lucide="trending-up" class="w-3 h-3"></i>
-                                    +{{ $trendOpen }}%
+                                    +{{ $trendOpen }}
                                 @elseif($trendOpen < 0)
                                     <i data-lucide="trending-down" class="w-3 h-3"></i>
-                                    {{ $trendOpen }}%
+                                    -{{ abs($trendOpen) }}
                                 @else
-                                    0%
+                                    <i data-lucide="minus" class="w-3 h-3"></i>
+                                    0
                                 @endif
                             </div>
                             <p class="mt-1 text-xs text-slate-400">
@@ -164,12 +165,13 @@
                                 class="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs font-semibold {{ $trendClosed > 0 ? 'bg-green-50 text-green-600' : ($trendClosed < 0 ? 'bg-red-50 text-red-600' : 'bg-slate-100 text-slate-500') }}">
                                 @if($trendClosed > 0)
                                     <i data-lucide="trending-up" class="w-3 h-3"></i>
-                                    +{{ $trendClosed }}%
+                                    +{{ $trendClosed }}
                                 @elseif($trendClosed < 0)
                                     <i data-lucide="trending-down" class="w-3 h-3"></i>
-                                    {{ $trendClosed }}%
+                                    -{{ abs($trendClosed) }}
                                 @else
-                                    0%
+                                    <i data-lucide="minus" class="w-3 h-3"></i>
+                                    0
                                 @endif
                             </div>
                             <p class="mt-1 text-xs text-slate-400">
