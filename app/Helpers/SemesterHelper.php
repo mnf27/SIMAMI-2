@@ -9,7 +9,9 @@ class SemesterHelper
         if (! $periode) {
             return '';
         }
+
         [$tahun, $semester] = explode('-', $periode);
+
         if ($semester == 1) {
             $label = 'Genap';
             $tahunAwal = $tahun - 1;
@@ -19,6 +21,7 @@ class SemesterHelper
             $tahunAwal = $tahun;
             $tahunAkhir = $tahun + 1;
         }
+
         return "({$label} {$tahunAwal}/{$tahunAkhir})";
     }
 }

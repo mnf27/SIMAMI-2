@@ -19,12 +19,12 @@ class UnitController extends Controller
         $totalUnit = Unit::count();
         $totalProdi = Unit::where('jenis', 'PRODI')->count();
         $totalLab = Unit::where('jenis', 'LAB')->count();
-        return view('admin.unit.index', compact('units', 'totalUnit', 'totalProdi', 'totalLab'));
+        return view('kps.unit.index', compact('units', 'totalUnit', 'totalProdi', 'totalLab'));
     }
 
     public function create()
     {
-        return view('admin.unit.create');
+        return view('kps.unit.create');
     }
 
     public function store(Request $request)
@@ -35,12 +35,12 @@ class UnitController extends Controller
             'lokasi' => 'nullable',
         ]);
         Unit::create($request->only(['nama', 'jenis', 'lokasi']));
-        return redirect()->route('admin.units.index')->with('success', 'Unit berhasil ditambahkan.');
+        return redirect()->route('kps.units.index')->with('success', 'Unit berhasil ditambahkan.');
     }
 
     public function edit(Unit $unit)
     {
-        return view('admin.unit.edit', compact('unit'));
+        return view('kps.unit.edit', compact('unit'));
     }
 
     public function update(Request $request, Unit $unit)
@@ -51,7 +51,7 @@ class UnitController extends Controller
             'lokasi' => 'nullable',
         ]);
         $unit->update($request->only(['nama', 'jenis', 'lokasi']));
-        return redirect()->route('admin.units.index')->with('success', 'Unit berhasil diperbarui.');
+        return redirect()->route('kps.units.index')->with('success', 'Unit berhasil diperbarui.');
     }
 
     public function destroy(Unit $unit)

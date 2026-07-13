@@ -32,7 +32,7 @@ class UserController extends Controller
         $totalLab = User::whereHas('role', function ($q) {
             $q->where('nama', 'TEKNISI');
         })->count();
-        return view('admin.user.index', compact(
+        return view('kps.user.index', compact(
             'users',
             'totalUser',
             'totalAuditor',

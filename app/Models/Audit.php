@@ -9,7 +9,7 @@ class Audit extends Model
     protected $fillable = [
         'nama_audit',
         'periode_id',
-        'instrument_template_id',
+        'instrumen_path',
         'final_ptpp_pdf',
         'tanggal_audit',
         'unit_id',
@@ -24,11 +24,6 @@ class Audit extends Model
     public function periode()
     {
         return $this->belongsTo(Periode::class);
-    }
-
-    public function instrumentTemplate()
-    {
-        return $this->belongsTo(InstrumentTemplate::class);
     }
 
     public function temuan()

@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminProdi\InstrumentTemplateController;
 use App\Http\Controllers\AdminProdi\UnitController;
 use App\Http\Controllers\AdminProdi\UserController;
 use App\Http\Controllers\Asesor\AuditController;
@@ -72,7 +71,9 @@ Route::middleware([
 Route::prefix('temuan')->name('temuan.')->middleware(['auth', 'nocache', 'role:ADMIN_PRODI,KPS,DOSEN,TEKNISI'])
     ->group(function () {
         Route::get('/', [TemuanController::class, 'index'])->name('index');
-        Route::post('/{id}', [TemuanController::class, 'update'])->name('update');
+        Route::get('/{audit}/distribusi', [TemuanController::class, 'distribusi'])->name('distribusi');
+        Route::post('/{temuan}', [TemuanController::class, 'update'])->name('update');
+        Route::post('/{temuan}/assign', [TemuanController::class, 'assign'])->name('assign');
     });
 
 Route::prefix('auditi')->name('auditi.')->middleware(['auth', 'nocache', 'role:KPS,TEKNISI'])
@@ -82,7 +83,7 @@ Route::prefix('auditi')->name('auditi.')->middleware(['auth', 'nocache', 'role:K
             ->name('hasil-auditor.download');
     });
 
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'nocache', 'role:ADMIN_PRODI'])->group(function () {
+Route::prefix('kps')->name('kps.')->middleware(['auth', 'nocache', 'role:KPS'])->group(function () {
     // Periode
     Route::get('/periode', [PeriodeController::class, 'index'])->name('periode.index');
     Route::post('/periode', [PeriodeController::class, 'store'])->name('periode.store');
@@ -96,11 +97,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'nocache', 'role:ADM
 
     // Unit
     Route::resource('units', UnitController::class)->except(['show']);
-
-    // Template Instrumen
-    Route::get('/templates', [InstrumentTemplateController::class, 'index'])->name('templates.index');
-    Route::post('/templates', [InstrumentTemplateController::class, 'store'])->name('templates.store');
-    Route::post('/templates/{template}/activate', [InstrumentTemplateController::class, 'activate'])->name('templates.activate');
 });
 
 // ASESOR
@@ -108,7 +104,6 @@ Route::prefix('asesor')->name('asesor.')->middleware(['auth', 'nocache', 'role:A
     Route::get('/dashboard', [AsesorDashboardController::class, 'index'])->name('dashboard');
     // AUDIT
     Route::get('/audit', [AuditController::class, 'index'])->name('audit.index');
-    Route::get('/audit/create', [AuditController::class, 'create'])->name('audit.create');
     Route::post('/audit', [AuditController::class, 'store'])->name('audit.store');
     Route::get('/audit/{id}', [AuditController::class, 'show'])->name('audit.show');
     Route::get('/audit/{id}/template', [AuditController::class, 'downloadTemplate'])

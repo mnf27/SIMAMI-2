@@ -202,18 +202,13 @@
                     <div class="relative flex flex-col lg:items-end lg:flex-row lg:justify-between gap-2">
                         <div>
                             <h3 class="font-bold text-slate-800">
-                                Import Instrumen
+                                Import Temuan Audit
                             </h3>
                             <p class="text-sm text-slate-500">
                                 Upload file instrumen audit untuk membagikan temuan.
                             </p>
                         </div>
                         <div class="relative flex flex-col lg:items-end lg:flex-row lg:justify-between gap-2">
-                            <a href="{{ route('asesor.audit.template.download', $audit->id) }}"
-                                class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-yellow-500 px-4 py-2 text-sm font-medium text-white hover:bg-yellow-600">
-                                <i data-lucide="download" class="w-4 h-4"></i>
-                                Download Template
-                            </a>
                             <button @click="openImport = true"
                                 class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-[#4866BD] px-4 py-2 text-sm font-medium text-white hover:bg-[#1E3A8A]">
                                 <i data-lucide="download" class="w-4 h-4"></i>

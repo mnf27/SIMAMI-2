@@ -20,70 +20,42 @@ class PeriodeController extends Controller
         $totalPeriode = Periode::count();
         $periodeDigunakan = Periode::has('audits')->count();
         $totalAudit = Audit::count();
-        return view('admin.periode.index', compact(
-            'periodes',
-            'periodeAktif',
-            'totalPeriode',
-            'periodeDigunakan',
-            'totalAudit'
-        ));
+
+        return view('kps.periode.index', compact('periodes', 'periodeAktif', 'totalPeriode',
+            'periodeDigunakan', 'totalAudit'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'tahun' => [
-                'required',
-                'integer',
-                'min:2000',
-                'max:9999',
-            ],
-            'semester' => [
-                'required',
-                'in:1,2',
-            ],
-        ]);
+        $request->validate(['tahun' => ['required', 'integer', 'min:2000', 'max:9999',],
+            'semester' => ['required', 'in:1,2',],]);
         $kode = $request->tahun.'-'.$request->semester;
-        Periode::firstOrCreate([
-            'kode' => $kode
-        ]);
-        return back()->with(
-            'success',
-            'Periode berhasil ditambahkan.'
-        );
+
+        Periode::firstOrCreate(['kode' => $kode]);
+
+        return back()->with('success', 'Periode berhasil ditambahkan.');
     }
 
     public function activate($id)
     {
         DB::transaction(function () use ($id) {
             // Nonaktifkan semua periode
-            Periode::query()->update([
-                'is_active' => false
-            ]);
+            Periode::query()->update(['is_active' => false]);
             // Aktifkan periode yang dipilih
-            Periode::where('id', $id)
-                ->update([
-                    'is_active' => true
-                ]);
+            Periode::where('id', $id)->update(['is_active' => true]);
         });
-        return back()->with(
-            'success',
-            'Periode aktif berhasil diperbarui.'
-        );
+
+        return back()->with('success', 'Periode aktif berhasil diperbarui.');
     }
 
     public function destroy(Periode $periode)
     {
         if ($periode->audits()->exists()) {
-            return back()->with(
-                'error',
-                'Periode tidak dapat dihapus karena sudah digunakan audit.'
-            );
+            return back()->with('error', 'Periode tidak dapat dihapus karena sudah digunakan audit.');
         }
+
         $periode->delete();
-        return back()->with(
-            'success',
-            'Periode berhasil dihapus.'
-        );
+
+        return back()->with('success', 'Periode berhasil dihapus.');
     }
 }

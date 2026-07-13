@@ -42,11 +42,6 @@ class User extends Authenticatable
         return $this->belongsTo(Unit::class);
     }
 
-    public function instrumentTemplates()
-    {
-        return $this->hasMany(InstrumentTemplate::class, 'uploaded_by');
-    }
-
     public function temuanAudits()
     {
         return $this->belongsToMany(TemuanAudit::class, 'temuan_users', 'user_id', 'temuan_id');

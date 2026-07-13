@@ -106,8 +106,17 @@
                             $audits->count() % 2 !== 0 &&
                             $loop->last &&
                             $audits->count() > 1;
-                        $userTemuan = $audit->temuan
-                            ->filter(fn ($t) => $t->users->contains(auth()->id()));
+                        if (auth()->user()->role->nama === 'KPS') {
+
+                            // KPS melihat seluruh temuan dalam audit
+                            $userTemuan = $audit->temuan;
+
+                        } else {
+
+                            // Role lain hanya melihat temuan yang menjadi tanggung jawabnya
+                            $userTemuan = $audit->temuan
+                                ->filter(fn ($t) => $t->users->contains(auth()->id()));
+                        }
                         if (request('status')) {
                             $userTemuan = $userTemuan
                                 ->where('status', request('status'));
@@ -118,11 +127,18 @@
                         $progress = $totalTemuan > 0
                             ? round(($closedCount / $totalTemuan) * 100)
                             : 0;
+                        $belumDistribusi = $audit->temuan
+                            ->filter(fn ($t) => $t->users->isEmpty())
+                            ->count();
+
+                        $sudahDistribusi = $audit->temuan->count() - $belumDistribusi;
+
+                        $distribusiSelesai = $belumDistribusi === 0;
                         $progressColor =
                             $progress >= 80 ? 'bg-green-500' :
                             ($progress >= 50 ? 'bg-amber-500' : 'bg-red-500');
                     @endphp
-                    <a href="{{ route('temuan.index', ['audit_id' => $audit->id]) }}"
+                    <div
                         class="group rounded-xl border border-slate-200 bg-white px-4 pt-4 pb-2 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl {{ ($singleItem || $isLastOdd) ? 'md:col-span-2' : '' }}">
                         <div class="flex items-start justify-between">
                             <div class="flex items-start gap-4">
@@ -171,9 +187,26 @@
                                 <div class="h-full rounded-full {{ $progressColor }}" style="width: {{ $progress }}%">
                                 </div>
                             </div>
+                            @if(auth()->user()->role->nama === 'KPS')
+                                <div class="mt-3">
+                                    @if($distribusiSelesai)
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                                            <i data-lucide="check-circle" class="w-3 h-3 mr-1"></i>
+                                            Distribusi Selesai
+                                        </span>
+                                    @else
+                                        <span
+                                            class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                            <i data-lucide="users" class="w-3 h-3 mr-1"></i>
+                                            {{ $belumDistribusi }} Temuan Belum Didistribusikan
+                                        </span>
+                                    @endif
+                                </div>
+                            @endif
                         </div>
                         <div class="flex-1"></div>
-                        <div class="mt-2 pt-2 border-t border-slate-200 flex items-center justify-between">
+                        <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between">
                             <div class="flex items-center justify-between gap-2">
                                 <p class="font-bold text-slate-800"> {{ $totalTemuan }} </p>
                                 <p class="text-xs text-slate-500"> Temuan </p>
@@ -192,8 +225,23 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="flex items-center gap-2">
+
+                                <a href="{{ route('temuan.index', ['audit_id' => $audit->id]) }}"
+                                    class="inline-flex items-center rounded-lg bg-slate-100 px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-200">
+                                    Lihat Temuan
+                                </a>
+
+                                @if(auth()->user()->role->nama === 'KPS')
+                                    <a href="{{ route('temuan.distribusi', ['audit' => $audit->id]) }}"
+                                        class="inline-flex items-center rounded-lg bg-[#1E3A8A] px-3 py-2 text-xs font-medium text-white hover:bg-[#152F79]">
+                                        {{ $distribusiSelesai ? 'Ubah Distribusi' : 'Distribusikan' }}
+                                    </a>
+                                @endif
+
+                            </div>
                         </div>
-                    </a>
+                    </div>
                 @empty
                     <div class="md:col-span-2">
                         <div class="bg-white border border-slate-200 rounded-2xl p-10 text-center shadow-sm">

@@ -51,38 +51,30 @@
                 <i data-lucide="file-warning" class="flex items-start w-5 h-5"></i>
                 <span>Temuan Saya</span>
             </x-nav-link>
-            @if(in_array(auth()->user()->role->nama, ['KPS', 'TEKNISI']))
+            @if(auth()->user()->role->nama == 'KPS')
                 <x-nav-link @click="sidebarOpen = false" :href="route('auditi.hasil-auditor.index')"
                     :active="request()->routeIs('auditi.hasil-auditor.*')" class="flex items-center gap-3 w-full">
                     <i data-lucide="file-check-2" class="w-5 h-5"></i>
                     <span>Hasil Auditor</span>
                 </x-nav-link>
-            @endif
-            {{-- MASTER DATA KHUSUS ADMIN PRODI --}}
-            @if(auth()->user()->role->nama == 'ADMIN_PRODI')
                 <div class="pt-1 space-y-2">
                     <p class="px-3 mb-2 text-[12px] font-semibold text-gray-400 uppercase tracking-wider">
                         Master Data
                     </p>
-                    <x-nav-link @click="sidebarOpen = false" :href="route('admin.periode.index')"
-                        :active="request()->routeIs('admin.periode.*')" class="flex items-center gap-3 w-full">
+                    <x-nav-link @click="sidebarOpen = false" :href="route('kps.periode.index')"
+                        :active="request()->routeIs('kps.periode.*')" class="flex items-center gap-3 w-full">
                         <i data-lucide="calendar-range" class="w-5 h-5"></i>
                         <span>Periode</span>
                     </x-nav-link>
-                    <x-nav-link @click="sidebarOpen = false" :href="route('admin.users.index')"
-                        :active="request()->routeIs('admin.users.*')" class="flex items-center gap-3 w-full">
+                    <x-nav-link @click="sidebarOpen = false" :href="route('kps.users.index')"
+                        :active="request()->routeIs('kps.users.*')" class="flex items-center gap-3 w-full">
                         <i data-lucide="users" class="w-5 h-5"></i>
                         <span>Users</span>
                     </x-nav-link>
-                    <x-nav-link @click="sidebarOpen = false" :href="route('admin.units.index')"
-                        :active="request()->routeIs('admin.units.*')" class="flex items-center gap-3 w-full">
+                    <x-nav-link @click="sidebarOpen = false" :href="route('kps.units.index')"
+                        :active="request()->routeIs('kps.units.*')" class="flex items-center gap-3 w-full">
                         <i data-lucide="building-2" class="w-5 h-5"></i>
                         <span>Units</span>
-                    </x-nav-link>
-                    <x-nav-link @click="sidebarOpen = false" :href="route('admin.templates.index')"
-                        :active="request()->routeIs('admin.templates.*')" class="flex items-center gap-3 w-full">
-                        <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
-                        <span>Template Instrumen</span>
                     </x-nav-link>
                 </div>
             @endif

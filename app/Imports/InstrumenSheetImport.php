@@ -3,50 +3,115 @@
 namespace App\Imports;
 
 use App\Models\TemuanAudit;
-use App\Models\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
 class InstrumenSheetImport implements ToCollection
 {
     protected $auditId;
-    protected $unitId;
 
-    public function __construct($auditId, $unitId)
+    public function __construct($auditId)
     {
         $this->auditId = $auditId;
-        $this->unitId = $unitId;
     }
 
     public function collection(Collection $rows)
     {
+        $mapping = [];
+        $headerRow = null;
         $imported = 0;
-        foreach ($rows as $row) {
-            // skip kosong
-            if (empty($row[0]) || empty($row[1])) {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cari Header
+        |--------------------------------------------------------------------------
+        */
+        foreach ($rows as $index => $row) {
+
+            foreach ($row as $column => $value) {
+
+                $text = strtoupper(trim((string) $value));
+
+                switch ($text) {
+
+                    case 'KODE STANDAR':
+                    case 'KODE':
+                    case 'KODE INDIKATOR':
+                        $mapping['kode'] = $column;
+                        break;
+
+                    case 'TEMUAN':
+                        $mapping['temuan'] = $column;
+                        break;
+
+                    case 'VALIDASI':
+                    case 'STATUS':
+                        $mapping['status'] = $column;
+                        break;
+                }
+            }
+
+            if (
+                isset($mapping['kode']) &&
+                isset($mapping['temuan']) &&
+                isset($mapping['status'])
+            ) {
+                $headerRow = $index;
+                break;
+            }
+        }
+
+        if ($headerRow === null) {
+            throw new \Exception(
+                'Header Kode Standar, Temuan, atau Validasi tidak ditemukan.'
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Import Data
+        |--------------------------------------------------------------------------
+        */
+        for ($i = $headerRow + 1; $i < $rows->count(); $i++) {
+
+            $row = $rows[$i];
+
+            $kode = trim((string) ($row[$mapping['kode']] ?? ''));
+
+            $temuan = trim((string) ($row[$mapping['temuan']] ?? ''));
+
+            $status = strtoupper(
+                trim((string) ($row[$mapping['status']] ?? ''))
+            );
+
+            // Lewati baris kosong
+            if ($kode === '' && $temuan === '') {
                 continue;
             }
-            $kode = trim($row[0]);
-            // hanya format seperti 3.4
+
+            // Pastikan hanya format indikator
             if (! preg_match('/^\d+\.\d+$/', $kode)) {
                 continue;
             }
-            $temuan = TemuanAudit::create([
+
+            // Hanya OPEN
+            if ($status !== 'OPEN') {
+                continue;
+            }
+
+            TemuanAudit::create([
                 'audit_id' => $this->auditId,
                 'kode_indikator' => $kode,
-                'temuan' => $row[1],
+                'temuan' => $temuan,
                 'status' => 'OPEN',
             ]);
-            // assign ke user unit
-            $users = User::where('unit_id', $this->unitId)->get();
-            foreach ($users as $user) {
-                $temuan->users()->attach($user->id);
-            }
+
             $imported++;
         }
+
         if ($imported === 0) {
             throw new \Exception(
-                'Format template instrumen tidak sesuai.'
+                'Tidak ditemukan temuan berstatus OPEN.'
             );
         }
     }
